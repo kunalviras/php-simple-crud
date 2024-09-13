@@ -7,3 +7,5 @@ a simple php crud by kunal viras.
 - open backend folder import database.sql
 - update your database details in connection.php
 
+## Command 
+php -S localhost:8000
