@@ -24,51 +24,71 @@ if (isset($_GET['message'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PHP crud by kunal viras.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PHP CRUD by Kunal Viras</title>
+    <script src="/tailwind.css"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-        <div class="p-8">
-            <h1 class="text-2xl font-bold mb-4">User Management</h1>
-
+<body class="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="px-4 py-5 sm:px-6 bg-gray-800 text-white">
+            <h1 class="text-3xl font-bold">User Management</h1>
+            <p class="mt-1 text-sm">Manage your users with this simple CRUD application</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
             <!-- Create/Edit Form -->
-            <form action="/backend/scriptcode.php" method="post" class="mb-4">
+            <form action="/backend/scriptcode.php" method="post" class="mb-8 bg-gray-50 p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4"><?php echo $editMode ? 'Edit User' : 'Create New User'; ?></h2>
                 <?php if ($editMode): ?>
                     <input type="hidden" name="id" value="<?php echo $editUser['id']; ?>">
                 <?php endif; ?>
-                <input type="text" name="name" placeholder="Name" required class="w-full p-2 mb-2 border rounded" value="<?php echo $editMode ? $editUser['name'] : ''; ?>">
-                <input type="email" name="email" placeholder="Email" required class="w-full p-2 mb-2 border rounded" value="<?php echo $editMode ? $editUser['email'] : ''; ?>">
-                <button type="submit" name="<?php echo $editMode ? 'update' : 'create'; ?>" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-                    <?php echo $editMode ? 'Update User' : 'Create User'; ?>
-                </button>
-                <?php if ($editMode): ?>
-                    <a href="index.php" class="ml-2 text-gray-500 hover:underline">Cancel</a>
-                <?php endif; ?>
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" name="name" id="name" placeholder="Enter name" required 
+                           class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
+                           value="<?php echo $editMode ? $editUser['name'] : ''; ?>">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Enter email" required 
+                           class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
+                           value="<?php echo $editMode ? $editUser['email'] : ''; ?>">
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" name="<?php echo $editMode ? 'update' : 'create'; ?>" 
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <?php echo $editMode ? 'Update User' : 'Create User'; ?>
+                    </button>
+                    <?php if ($editMode): ?>
+                        <a href="index.php" class="text-sm text-indigo-600 hover:text-indigo-900">Cancel</a>
+                    <?php endif; ?>
+                </div>
             </form>
 
             <!-- User List -->
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th class="text-left">Name</th>
-                        <th class="text-left">Email</th>
-                        <th class="text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $userListing->fetch_assoc()): ?>
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <td><?php echo $row['name']; ?></td>
-                            <td><?php echo $row['email']; ?></td>
-                            <td>
-                                <a href="?edit=<?php echo $row['id']; ?>" class="text-blue-500 hover:underline">Edit</a>
-                                <a href="/backend/scriptcode.php?delete=<?php echo $row['id']; ?>" class="text-red-500 hover:underline ml-2" onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
-                            </td>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <?php while ($row = $userListing->fetch_assoc()): ?>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?php echo $row['name']; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $row['email']; ?></td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="?edit=<?php echo $row['id']; ?>" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                    <a href="/backend/scriptcode.php?delete=<?php echo $row['id']; ?>" 
+                                       class="text-red-600 hover:text-red-900" 
+                                       onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
